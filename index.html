@@ -129,7 +129,7 @@
   </form>
 
   <script>
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwnz88g1T2izT-NIl6lOCr_G0H-F7Ef7wl1TjXEDKgm3fkiBlXbC7PTXnBlWcfnk6uALA/exec"; // <-- paste Apps Script Web App URL
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwnz88g1T2izT-NIl6lOCr_G0H-F7Ef7wl1TjXEDKgm3fkiBlXbC7PTXnBlWcfnk6uALA/exec";
 
     const form = document.getElementById('quiz-form');
     const statusEl = document.getElementById('status');
@@ -137,38 +137,34 @@
 
     form.addEventListener('submit', function (e) {
       e.preventDefault();
+
       statusEl.textContent = "";
       statusEl.className = "status";
       submitBtn.disabled = true;
       submitBtn.textContent = "Submitting...";
 
-      // Grab answers
       const formData = new FormData(form);
       const name = formData.get('name') || "";
       const q1 = formData.get('q1') || "";
       const q2 = formData.get('q2') || "";
       const q3 = formData.get('q3') || "";
 
-      // Simple scoring logic (hard-code correct answers)
-      let score = 0;
-      if (q1 === "B") score++;
-      if (q2 === "C") score++;
-      if (q3 === "False") score++;
+      // Simple scoring
+      let scoreNum = 0;
+      if (q1 === "B") scoreNum++;
+      if (q2 === "C") scoreNum++;
+      if (q3 === "False") scoreNum++;
 
-      const payload = {
-        name,
-        q1,
-        q2,
-        q3,
-        score: score + "/3"
-      };
+      const payload = new URLSearchParams();
+      payload.append("name", name);
+      payload.append("q1", q1);
+      payload.append("q2", q2);
+      payload.append("q3", q3);
+      payload.append("score", scoreNum + "/3");
 
       fetch(WEB_APP_URL, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
+        body: payload   // browser sets Content-Type: application/x-www-form-urlencoded
       })
         .then(response => response.json())
         .then(data => {
