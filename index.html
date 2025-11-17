@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Training Video + Quiz</title>
+  <title>Training: Developing a New Leader</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     body {
@@ -35,7 +35,7 @@
       box-shadow: 0 10px 25px rgba(0,0,0,0.3);
     }
     .question {
-      margin-bottom: 1rem;
+      margin-bottom: 1.25rem;
     }
     .question p {
       margin-bottom: 0.5rem;
@@ -46,7 +46,8 @@
       margin-bottom: 0.25rem;
       cursor: pointer;
     }
-    input[type="text"] {
+    input[type="text"],
+    input[type="email"] {
       width: 100%;
       padding: 0.5rem;
       border-radius: 0.5rem;
@@ -81,12 +82,12 @@
   </style>
 </head>
 <body>
-  <h1>Training: Safety Basics</h1>
+  <h1>Developing a New Leader</h1>
   <p style="text-align:center; margin-bottom: 1.5rem;">
-    Watch the video below, then complete the quiz. Your results will be recorded automatically.
+    Watch the training video, then complete the quiz below. Your results will be logged automatically.
   </p>
 
-  <!-- YouTube Video -->
+  <!-- Optional YouTube video -->
   <div class="video-wrapper">
     <iframe
       src="https://www.youtube.com/embed/TZ_sET3ar0M"
@@ -99,29 +100,71 @@
   <!-- Quiz Form -->
   <h2>Quiz</h2>
   <form id="quiz-form">
+    <!-- TrainingId is hidden so we can identify which training this was -->
+    <input type="hidden" name="TrainingId" value="DevelopingNewLeader" />
+
     <div class="question">
       <p>Your name:</p>
-      <input type="text" name="name" required placeholder="First Last" />
+      <input type="text" name="Name" required placeholder="First Last" />
     </div>
 
     <div class="question">
-      <p>1. What is the first step in staying safe?</p>
-      <label><input type="radio" name="q1" value="A" required /> Ignore instructions and improvise</label>
-      <label><input type="radio" name="q1" value="B" /> Follow established procedures</label>
-      <label><input type="radio" name="q1" value="C" /> Wait for someone else to act</label>
+      <p>Your email:</p>
+      <input type="email" name="Email" required placeholder="you@example.com" />
     </div>
 
+    <!-- Q1 -->
     <div class="question">
-      <p>2. When should you report a hazard?</p>
-      <label><input type="radio" name="q2" value="A" required /> Only if someone gets hurt</label>
-      <label><input type="radio" name="q2" value="B" /> At the end of the week</label>
-      <label><input type="radio" name="q2" value="C" /> As soon as you notice it</label>
+      <p>1. The best managers make decisions on the basis of what is fair and equitable, not what is ____.</p>
+      <input type="text" name="q1" required placeholder="Type your answer" />
     </div>
 
+    <!-- Q2 -->
     <div class="question">
-      <p>3. True or False: PPE is optional if you’re experienced.</p>
-      <label><input type="radio" name="q3" value="True" required /> True</label>
-      <label><input type="radio" name="q3" value="False" /> False</label>
+      <p>2. A great leader is someone who walks the talk and is ____.</p>
+      <input type="text" name="q2" required placeholder="Type your answer" />
+    </div>
+
+    <!-- Q3 -->
+    <div class="question">
+      <p>3. Micromanagement should be reduced once a new employee starts building ____.</p>
+      <input type="text" name="q3" required placeholder="Type your answer" />
+    </div>
+
+    <!-- Q4 -->
+    <div class="question">
+      <p>4. What is a key characteristic of a great leader according to the content?</p>
+      <label><input type="radio" name="q4" value="A" required /> They prefer to work in isolation.</label>
+      <label><input type="radio" name="q4" value="B" /> They make decisions based on popularity.</label>
+      <label><input type="radio" name="q4" value="C" /> They avoid giving praise to maintain authority.</label>
+      <label><input type="radio" name="q4" value="D" /> They are approachable and listen to others' opinions.</label>
+    </div>
+
+    <!-- Q5 -->
+    <div class="question">
+      <p>5. Why is it important for supervisors to document monthly meetings with direct reports?</p>
+      <label><input type="radio" name="q5" value="A" required /> To initiate disciplinary actions when needed.</label>
+      <label><input type="radio" name="q5" value="B" /> To ensure employees are aware of their shortcomings.</label>
+      <label><input type="radio" name="q5" value="C" /> To create a formal record for legal purposes.</label>
+      <label><input type="radio" name="q5" value="D" /> To have a record of praise that can be used in performance evaluations.</label>
+    </div>
+
+    <!-- Q6 -->
+    <div class="question">
+      <p>6. What is the recommended approach when communicating changes in work conditions?</p>
+      <label><input type="radio" name="q6" value="A" required /> Send a single email to all employees.</label>
+      <label><input type="radio" name="q6" value="B" /> Communicate repeatedly and through multiple channels.</label>
+      <label><input type="radio" name="q6" value="C" /> Discuss changes only in team meetings.</label>
+      <label><input type="radio" name="q6" value="D" /> Rely on word-of-mouth communication.</label>
+    </div>
+
+    <!-- Q7 -->
+    <div class="question">
+      <p>7. How should a supervisor handle micromanagement with new employees over time?</p>
+      <label><input type="radio" name="q7" value="A" required /> Maintain strict control indefinitely.</label>
+      <label><input type="radio" name="q7" value="B" /> Gradually reduce micromanagement as trust is built.</label>
+      <label><input type="radio" name="q7" value="C" /> Increase micromanagement if mistakes occur.</label>
+      <label><input type="radio" name="q7" value="D" /> Only reduce micromanagement after one year.</label>
     </div>
 
     <button type="submit" id="submit-btn">Submit Quiz</button>
@@ -129,7 +172,10 @@
   </form>
 
   <script>
+    // Your existing Apps Script Web App URL
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwnz88g1T2izT-NIl6lOCr_G0H-F7Ef7wl1TjXEDKgm3fkiBlXbC7PTXnBlWcfnk6uALA/exec";
+
+    const PASS_THRESHOLD = 6; // require 6 out of 7 to "pass" – change this if you want
 
     const form = document.getElementById('quiz-form');
     const statusEl = document.getElementById('status');
@@ -144,32 +190,59 @@
       submitBtn.textContent = "Submitting...";
 
       const formData = new FormData(form);
-      const name = formData.get('name') || "";
-      const q1 = formData.get('q1') || "";
-      const q2 = formData.get('q2') || "";
-      const q3 = formData.get('q3') || "";
 
-      // Simple scoring
+      const trainingId = formData.get('TrainingId') || "DevelopingNewLeader";
+      const name = formData.get('Name') || "";
+      const email = formData.get('Email') || "";
+
+      // Short-answer questions (normalize case & trim)
+      const q1 = (formData.get('q1') || "").trim().toLowerCase();
+      const q2 = (formData.get('q2') || "").trim().toLowerCase();
+      const q3 = (formData.get('q3') || "").trim().toLowerCase();
+
+      // Multiple-choice questions
+      const q4 = formData.get('q4') || "";
+      const q5 = formData.get('q5') || "";
+      const q6 = formData.get('q6') || "";
+      const q7 = formData.get('q7') || "";
+
       let scoreNum = 0;
-      if (q1 === "B") scoreNum++;
-      if (q2 === "C") scoreNum++;
-      if (q3 === "False") scoreNum++;
+
+      // Correct answers
+      if (q1 === "popular") scoreNum++;
+      if (q2 === "trustworthy") scoreNum++;
+      if (q3 === "trust") scoreNum++;
+      if (q4 === "D") scoreNum++;
+      if (q5 === "D") scoreNum++;
+      if (q6 === "B") scoreNum++;
+      if (q7 === "B") scoreNum++;
+
+      const passValue = scoreNum >= PASS_THRESHOLD ? "PASS" : "FAIL";
 
       const payload = new URLSearchParams();
-      payload.append("name", name);
-      payload.append("q1", q1);
-      payload.append("q2", q2);
-      payload.append("q3", q3);
-      payload.append("score", scoreNum + "/3");
+      payload.append("TrainingId", trainingId);
+      payload.append("Name", name);
+      payload.append("Email", email);
+      payload.append("Score", scoreNum + "/7");
+      payload.append("pass", passValue);
+
+      // store raw answers as well
+      payload.append("q1", formData.get('q1') || "");
+      payload.append("q2", formData.get('q2') || "");
+      payload.append("q3", formData.get('q3') || "");
+      payload.append("q4", q4);
+      payload.append("q5", q5);
+      payload.append("q6", q6);
+      payload.append("q7", q7);
 
       fetch(WEB_APP_URL, {
         method: "POST",
-        body: payload   // browser sets Content-Type: application/x-www-form-urlencoded
+        body: payload
       })
         .then(response => response.json())
         .then(data => {
           if (data.status === "success") {
-            statusEl.textContent = "Thanks! Your quiz has been submitted.";
+            statusEl.textContent = `Thanks! Your quiz has been submitted. Score: ${scoreNum}/7 (${passValue}).`;
             statusEl.classList.add("success");
             form.reset();
           } else {
