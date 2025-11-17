@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Training Video + Quiz</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 1.5rem;
+      background: #111827;
+      color: #f9fafb;
+    }
+    h1, h2 {
+      text-align: center;
+    }
+    .video-wrapper {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      margin-bottom: 1.5rem;
+    }
+    .video-wrapper iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      border: 0;
+    }
+    form {
+      background: #1f2937;
+      padding: 1.5rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+    .question {
+      margin-bottom: 1rem;
+    }
+    .question p {
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.25rem;
+      cursor: pointer;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      border: 1px solid #4b5563;
+      background: #111827;
+      color: #f9fafb;
+    }
+    button {
+      margin-top: 1rem;
+      padding: 0.75rem 1.25rem;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      background: #4f46e5;
+      color: #f9fafb;
+    }
+    button:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+    .status {
+      margin-top: 0.75rem;
+      font-size: 0.9rem;
+    }
+    .status.error {
+      color: #fca5a5;
+    }
+    .status.success {
+      color: #bbf7d0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Training: Safety Basics</h1>
+  <p style="text-align:center; margin-bottom: 1.5rem;">
+    Watch the video below, then complete the quiz. Your results will be recorded automatically.
+  </p>
+
+  <!-- YouTube Video -->
+  <div class="video-wrapper">
+    <iframe
+      src="https://www.youtube.com/embed/VIDEO_ID_HERE"
+      title="Training Video"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen>
+    </iframe>
+  </div>
+
+  <!-- Quiz Form -->
+  <h2>Quiz</h2>
+  <form id="quiz-form">
+    <div class="question">
+      <p>Your name:</p>
+      <input type="text" name="name" required placeholder="First Last" />
+    </div>
+
+    <div class="question">
+      <p>1. What is the first step in staying safe?</p>
+      <label><input type="radio" name="q1" value="A" required /> Ignore instructions and improvise</label>
+      <label><input type="radio" name="q1" value="B" /> Follow established procedures</label>
+      <label><input type="radio" name="q1" value="C" /> Wait for someone else to act</label>
+    </div>
+
+    <div class="question">
+      <p>2. When should you report a hazard?</p>
+      <label><input type="radio" name="q2" value="A" required /> Only if someone gets hurt</label>
+      <label><input type="radio" name="q2" value="B" /> At the end of the week</label>
+      <label><input type="radio" name="q2" value="C" /> As soon as you notice it</label>
+    </div>
+
+    <div class="question">
+      <p>3. True or False: PPE is optional if you’re experienced.</p>
+      <label><input type="radio" name="q3" value="True" required /> True</label>
+      <label><input type="radio" name="q3" value="False" /> False</label>
+    </div>
+
+    <button type="submit" id="submit-btn">Submit Quiz</button>
+    <div class="status" id="status"></div>
+  </form>
+
+  <script>
+    const WEB_APP_URL = "YOUR_WEB_APP_URL_HERE"; // <-- paste Apps Script Web App URL
+
+    const form = document.getElementById('quiz-form');
+    const statusEl = document.getElementById('status');
+    const submitBtn = document.getElementById('submit-btn');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      statusEl.textContent = "";
+      statusEl.className = "status";
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Submitting...";
+
+      // Grab answers
+      const formData = new FormData(form);
+      const name = formData.get('name') || "";
+      const q1 = formData.get('q1') || "";
+      const q2 = formData.get('q2') || "";
+      const q3 = formData.get('q3') || "";
+
+      // Simple scoring logic (hard-code correct answers)
+      let score = 0;
+      if (q1 === "B") score++;
+      if (q2 === "C") score++;
+      if (q3 === "False") score++;
+
+      const payload = {
+        name,
+        q1,
+        q2,
+        q3,
+        score: score + "/3"
+      };
+
+      fetch(WEB_APP_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.status === "success") {
+            statusEl.textContent = "Thanks! Your quiz has been submitted.";
+            statusEl.classList.add("success");
+            form.reset();
+          } else {
+            throw new Error(data.message || "Unknown error");
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          statusEl.textContent = "There was a problem submitting your quiz. Please let your manager know.";
+          statusEl.classList.add("error");
+        })
+        .finally(() => {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Submit Quiz";
+        });
+    });
+  </script>
+</body>
+</html>
